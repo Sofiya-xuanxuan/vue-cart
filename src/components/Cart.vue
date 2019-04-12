@@ -42,6 +42,7 @@
             }
         },
         created() {
+            console.log(this.cart);
             //监听父组件添加商品事件
             this.$bus.$on('addCart', good => {
                 //find方法：找到对应的项并返回
@@ -98,6 +99,7 @@
         watch: {
             cart: {
                 handler(newVal,oldVal) {
+                    console.log(oldVal);
                     localStorage.setItem("cart",JSON.stringify(newVal))
                 },
                 deep: true
