@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <p>{{name}}</p>
+    <div id="cart">
+        <h1>{{name}}</h1>
         <!--购物车列表-->
         <table border="1">
             <tr>
@@ -111,5 +111,8 @@
 <style scoped>
     .active {
         color: red;
+    }
+    table {
+        margin: 0 auto;
     }
 </style>

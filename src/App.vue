@@ -9,25 +9,49 @@
         <el-button @click="addGood(index)">添加购物车</el-button>
       </li>
     </ul>
-    <!--购物车-->
-    <Cart :name="name"></Cart>
+    <!--实现购物车-->
+    <cart :name="name"></cart>
+
+    <!--实现数据双向绑定-->
+    <k-input v-model="someValue"></k-input>{{someValue}}
+
+
+    <!--实现插槽-->
+    <k-slot>
+      <template slot="head">
+        <h1>head</h1>
+      </template>
+      <h4>content....</h4>
+      <template slot="foot">
+        <h5>foot</h5>
+      </template>
+    </k-slot>
+
+    <!--设计公用组件-->
+    <!--element中的form-->
+    <e-form></e-form>
+
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 import Cart from './components/Cart.vue'
+import KInput from './components/Input.vue';
+import EForm from './components/Form.vue';
+import KSlot from './components/Slot.vue';
 
 export default {
   name: 'app',
   data(){
     return {
       name:'vue购物车',
-      goods:[]
+      goods:[],
+      someValue:'some value'
     }
   },
   components: {
-    HelloWorld, Cart
+    HelloWorld,Cart,KInput,EForm,KSlot
   },
   async created(){
     try{
@@ -56,5 +80,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  text-align: center;
 }
 </style>
