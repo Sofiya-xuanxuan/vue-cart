@@ -16,7 +16,7 @@
 
 <script>
     export default {
-        name: "Slot"
+        name: "Slot",
     }
 </script>
 

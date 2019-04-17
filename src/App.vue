@@ -13,7 +13,7 @@
     <cart :name="name"></cart>
 
     <!--实现数据双向绑定-->
-    <k-input v-model="someValue"></k-input>{{someValue}}
+    <k-input v-model="someValue" @blur="blurEvent"></k-input>{{someValue}}
 
 
     <!--实现插槽-->
@@ -29,7 +29,7 @@
 
     <!--设计公用组件-->
     <!--element中的form-->
-    <e-form></e-form>
+    <e-form-test></e-form-test>
 
   </div>
 </template>
@@ -38,7 +38,7 @@
 import HelloWorld from './components/HelloWorld.vue'
 import Cart from './components/Cart.vue'
 import KInput from './components/Input.vue';
-import EForm from './components/Form.vue';
+import EFormTest from './components/FormTest.vue';
 import KSlot from './components/Slot.vue';
 
 export default {
@@ -51,7 +51,7 @@ export default {
     }
   },
   components: {
-    HelloWorld,Cart,KInput,EForm,KSlot
+    HelloWorld,Cart,KInput,EFormTest,KSlot
   },
   async created(){
     try{
@@ -66,9 +66,11 @@ export default {
     addGood(i){
       const good=this.goods[i];
       this.$bus.$emit('addCart',good);
+    },
+    blurEvent(data) {
+      this.someValue=data;
     }
   }
-
 }
 </script>
 

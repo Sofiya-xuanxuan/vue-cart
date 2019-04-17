@@ -1,18 +1,23 @@
 <template>
     <!--实现数据双向绑定-->
     <div id="inputName">
-        <h1>数据双向绑定</h1>
-        <input type="text" :value="inputValue" @input="inputHandler">
+        <input :type="type" :value="inputValue" @input="inputHandler" @blur="blurHandler">
     </div>
 </template>
 
 <script>
+    import emitter from '../service/util.js';
     export default {
         name: "Input",
+        mixins:[emitter],
         props:{
             value:{
                 type:String,
                 default:''//默认值
+            },
+            type:{
+                type:String,
+                default: 'text'
             }
         },
         data() {
@@ -21,10 +26,23 @@
             }
         },
         methods: {
+            //input事件
             inputHandler(e) {
                 this.inputValue=e.target.value;
                 //通知父组件值更新
-                this.$emit('input',this.inputValue)
+                //此处通知的名称-input是不能做更改的，
+                this.$emit('input',this.inputValue);
+                //通知formitem做校验
+                //让formitem自己去派发事件，则可以接收到数据的变化
+                //为什么不让input自己去派发事件呢？因为在formitem中还是slot槽，根本没办法去接收数据
+                this.dispatch('FormItem','validate',this.inputValue)
+                //this.$parent.$emit('validate',this.inputValue)//将当前的值传出去
+            },
+            //blur事件
+            blurHandler(e){
+                this.inputValue=e.target.value;
+                this.$emit('blur',this.inputValue);
+                this.dispatch('FormItem','validate',this.inputValue)
             }
         },
     }

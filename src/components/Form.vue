@@ -1,53 +1,50 @@
 <template>
-    <div id="formName">
-        <h1>element-form</h1>
-        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-            <el-form-item label="用户名" prop="name">
-                <el-input v-model="form.name"></el-input>
-            </el-form-item>
-            <el-form-item label="密码" prop="pwd">
-                <el-input v-model="form.pwd" type="password"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="submit">提交</el-button>
-            </el-form-item>
-        </el-form>
-
-        <h1>k-form</h1>
-        
-    </div>
+    <form action="">
+        <slot></slot>
+    </form>
 </template>
 
 <script>
     export default {
         name: "Form",
-        data() {
+        provide(){//将表单的实例传递给后代
             return {
-                form: {
-                    name: '',
-                    pwd: ''
-                },
-                rules: {
-                    name: [
-                        {required:true,message:'请输入姓名'},
-                        {min:3,max:6,message:'长度在是-6位字符'}
-                    ],
-                    pwd:[
-                        {required:true,message:'请输入密码'}
-                    ]
-                }
+                form:this//后代通过this，无论何时都可以拿到父组件的model、rules
             }
         },
+        props:{
+            model:{
+                type:Object,
+                required:true
+            },
+            rules:{
+                type: Object
+            }
+        },
+        data() {
+            return {
+                fields:[]
+            }
+        },
+        created(){
+            //缓存所有需要校验的项
+            this.$on('formItemAdd',item=>this.fields.push(item))
+        },
         methods: {
-            submit() {
-                this.$refs.form.validate(valide=>{
-                    if(valide) {
-                       alert('提交登录！')
-                    }else {
-                        console.log('校验失败！')
-                        return false;//阻止浏览器的默认提交，页面不会刷新
+            async validate(callback) {
+                //得到一个promise组成的数组（将formitem数组转换为validate()返回的promise数组）
+                //此处的ite是子组件传来的this
+                const tasks=this.fields.map(item=>item.validate())
+                //获取所有结果统一处理(所有的结果处理完了，再去处理)
+                let ret=true;
+                const results=await Promise.all(tasks);
+                results.forEach(valid=>{
+                    if(!valid) {
+                        //只要有一个时报
+                        ret=false;
                     }
                 })
+                callback(ret);//回调将结果告诉
             }
         },
     }
